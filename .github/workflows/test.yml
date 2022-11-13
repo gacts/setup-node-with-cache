@@ -1,0 +1,38 @@
+name: tests
+
+on:
+  push:
+    branches: [master, main]
+    tags-ignore: ['**']
+    paths-ignore: ['**.md']
+  pull_request:
+    paths-ignore: ['**.md']
+
+jobs:
+  gitleaks:
+    name: GitLeaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with: {fetch-depth: 0}
+
+      - uses: gacts/gitleaks@v1
+
+  run-this-action:
+    name: Run action (${{ matrix.runs-on }})
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on: [macos-latest, ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run this action
+        id: act
+        uses: ./
+
+      - run: |
+          echo 'steps.act.outputs.npm-cache-hit = ${{ steps.act.outputs.npm-cache-hit }}'
+          echo 'steps.act.outputs.yarn-cache-hit = ${{ steps.act.outputs.yarn-cache-hit }}'
+          echo 'steps.act.outputs.node-version = ${{ steps.act.outputs.node-version }}'

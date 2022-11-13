@@ -1,0 +1,70 @@
+# Metadata syntax: <https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions>
+
+name: Setup NodeJS environment with a Cache
+description: Setup a Node environment, additionally enable caching
+
+inputs:
+  node-version:
+    description: The Node version to download (if necessary) and use. Supports semver spec and ranges
+
+  node-version-file:
+    description: File containing the version Spec of the version to use. Examples - `.nvmrc`, `.node-version`, `.tool-versions`
+
+  registry-url:
+    description: Optional registry to set up for auth. Will set the registry in a project level `.npmrc` and `.yarnrc` file, and set up auth to read in from `env.NODE_AUTH_TOKEN`
+
+  cache-key-suffix:
+    description: Optional cache key suffix
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Setup NodeJS
+      id: setup-node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        node-version-file: ${{ inputs.node-version-file }}
+        registry-url: ${{ inputs.registry-url }}
+
+    - name: Determine npm cache directory path # https://github.com/actions/cache/blob/main/examples.md#node---npm
+      id: npm-cache-dir
+      shell: bash
+      run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+
+    - uses: actions/cache@v3 # https://github.com/actions/cache/blob/main/examples.md#node---npm
+      id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+      with:
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-node${{ inputs.cache-key-suffix && '-' }}${{ inputs.cache-key-suffix }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: ${{ runner.os }}-node${{ inputs.cache-key-suffix && '-' }}${{ inputs.cache-key-suffix }}-
+
+    - name: Determine yarn cache directory path # https://github.com/actions/cache/blob/main/examples.md#node---yarn
+      id: yarn-cache-dir
+      shell: bash
+      run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+    - uses: actions/cache@v3
+      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      with:
+        path: ${{ steps.yarn-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-yarn${{ inputs.cache-key-suffix && '-' }}${{ inputs.cache-key-suffix }}-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: ${{ runner.os }}-yarn${{ inputs.cache-key-suffix && '-' }}${{ inputs.cache-key-suffix }}-
+
+outputs:
+  node-version:
+    description: The installed node version
+    value: ${{ steps.setup-node.outputs.node-version }}
+
+  npm-cache-hit:
+    description: A boolean value to indicate if npm cache was hit
+    value: ${{ steps.npm-cache.outputs.cache-hit }}
+
+  yarn-cache-hit:
+    description: A boolean value to indicate if yarn cache was hit
+    value: ${{ steps.yarn-cache.outputs.cache-hit }}
+
+branding:
+  icon: box
+  color: orange
