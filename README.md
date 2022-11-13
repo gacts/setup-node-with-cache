@@ -49,7 +49,7 @@ Down to this:
 ```yaml
 steps:
   - uses: gacts/setup-node-with-cache@v1
-    with: {node-version: 1.19}
+    with: {node-version: 19}
 ```
 
 Or using `node-version-file` for version selection:
@@ -66,7 +66,7 @@ Output values can be used on your choice, for example:
 steps:
   - uses: gacts/setup-node-with-cache@v1
     id: setup-node
-    with: {node-version: 1.19}
+    with: {node-version: 19}
 
   - if: steps.setup-node.outputs.npm-cache-hit != 'true' # or `yarn-cache-hit`
     run: npm ci
