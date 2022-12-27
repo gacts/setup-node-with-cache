@@ -85,7 +85,7 @@ If you find any action errors - please, [make an issue][link_create_issue] in th
 
 This is open-sourced software licensed under the [MIT License][link_license].
 
-[badge_build]:https://img.shields.io/github/workflow/status/gacts/setup-node-with-cache/tests?maxAge=30
+[badge_build]:https://img.shields.io/github/actions/workflow/status/gacts/setup-node-with-cache/test.yml?branch=master&maxAge=30
 [badge_release_version]:https://img.shields.io/github/release/gacts/setup-node-with-cache.svg?maxAge=30
 [badge_license]:https://img.shields.io/github/license/gacts/setup-node-with-cache.svg?longCache=true
 [badge_issues]:https://img.shields.io/github/issues/gacts/setup-node-with-cache.svg?maxAge=45
