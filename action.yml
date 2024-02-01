@@ -33,7 +33,7 @@ runs:
       shell: bash
       run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
 
-    - uses: actions/cache@v3 # https://github.com/actions/cache/blob/main/examples.md#node---npm
+    - uses: actions/cache@v4 # https://github.com/actions/cache/blob/main/examples.md#node---npm
       id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
       with:
         path: ${{ steps.npm-cache-dir.outputs.dir }}
@@ -45,7 +45,7 @@ runs:
       shell: bash
       run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
       with:
         path: ${{ steps.yarn-cache-dir.outputs.dir }}
