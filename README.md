@@ -8,14 +8,25 @@
 [![Build Status][badge_build]][link_build]
 [![License][badge_license]][link_license]
 
-Composite GitHub Action which combines the perfect pairing of [actions/setup-node](https://github.com/actions/setup-node) with [actions/cache](https://github.com/actions/cache) for the caching.
+> [!IMPORTANT]
+> Seems like this action is no longer makes sense, because the [actions/setup-node](https://github.com/actions/setup-node)
+> now supports caching out of the box. Please, use it instead like this way:
+>
+> ```yaml
+> steps:
+>   - uses: actions/setup-node@v4
+>     with: {node-version: 20, cache: 'npm'}
+> ```
+
+Composite GitHub Action which combines the perfect pairing of [actions/setup-node](https://github.com/actions/setup-node)
+with [actions/cache](https://github.com/actions/cache) for the caching.
 
 Reducing all these workflow steps:
 
 ```yaml
 steps:
   - name: Setup NodeJS
-    uses: actions/setup-node@v3
+    uses: actions/setup-node@v4
     with:
       node-version: 19
 
@@ -24,7 +35,7 @@ steps:
     shell: bash
     run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
 
-  - uses: actions/cache@v3
+  - uses: actions/cache@v4
     id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
     with:
       path: ${{ steps.npm-cache-dir.outputs.dir }}
@@ -36,7 +47,7 @@ steps:
     shell: bash
     run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-  - uses: actions/cache@v3
+  - uses: actions/cache@v4
     id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
     with:
       path: ${{ steps.yarn-cache-dir.outputs.dir }}
@@ -48,16 +59,14 @@ Down to this:
 
 ```yaml
 steps:
-  - uses: gacts/setup-node-with-cache@v1
-    with: {node-version: 19}
+  - {uses: gacts/setup-node-with-cache@v1, with: {node-version: 19}}
 ```
 
 Or using `node-version-file` for version selection:
 
 ```yaml
 steps:
-  - uses: gacts/setup-node-with-cache@v1
-    with: {node-version-file: .node-version}
+  - {uses: gacts/setup-node-with-cache@v1, with: {node-version-file: .node-version}}
 ```
 
 Output values can be used on your choice, for example:
@@ -72,7 +81,8 @@ steps:
     run: npm ci
 ```
 
-> Tip: Use [Dependabot][use_dependabot] to maintain your `gacts/setup-node-with-cache` version updated in your GitHub workflows.
+> [!TIP]
+> Use [Dependabot](https://bit.ly/45zwLL1) to keep this action updated in your repository.
 
 ## Support
 
@@ -96,5 +106,3 @@ This is open-sourced software licensed under the [MIT License][link_license].
 [link_issues]:https://github.com/gacts/setup-node-with-cache/issues
 [link_create_issue]:https://github.com/gacts/setup-node-with-cache/issues/new
 [link_pulls]:https://github.com/gacts/setup-node-with-cache/pulls
-
-[use_dependabot]:https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/keeping-your-actions-up-to-date-with-dependabot
