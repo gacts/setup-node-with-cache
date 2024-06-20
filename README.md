@@ -9,8 +9,8 @@
 [![License][badge_license]][link_license]
 
 > [!IMPORTANT]
-> Seems like this action is no longer makes sense, because the [actions/setup-node](https://github.com/actions/setup-node)
-> now supports caching out of the box. Please, use it instead like this way:
+> It seems like this action is no longer necessary because [actions/setup-node](https://github.com/actions/setup-node)
+> now supports caching out of the box. Please use it instead, as shown below:
 >
 > ```yaml
 > steps:
