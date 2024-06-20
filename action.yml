@@ -21,6 +21,12 @@ inputs:
 runs:
   using: composite
   steps:
+    - shell: bash
+      run: >
+        echo '::warning title=Action gacts/setup-node-with-cache is deprecated::It seems like this action is no longer
+        necessary because https://github.com/actions/setup-node now supports caching out of the box. Please use it
+        instead'
+
     - name: Setup NodeJS
       id: setup-node
       uses: actions/setup-node@v4
